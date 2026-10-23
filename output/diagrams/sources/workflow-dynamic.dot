@@ -1,0 +1,23 @@
+digraph G {
+graph [bgcolor="transparent", rankdir=LR, pad="0.25", nodesep="0.42", ranksep="0.85", splines=polyline, outputorder=edgesfirst]; node [fontname="Helvetica", fontsize=13, color="#CAD5DF", fontcolor="#203348"]; edge [fontname="Helvetica", fontsize=10, color="#8B99A8", fontcolor="#46566A", arrowsize=0.7];
+rankdir=TB; node [shape=box, style="rounded,filled", fillcolor="#EFF5FA", margin="0.22,0.14", fontsize=15]; edge [fontsize=12];
+customize [label="Doctor selects Customize fields",];
+define [label="Choose label, data type, section\nRequired flag, choices and validation rules",];
+validate [label="API validates field definition\nAllowed context and supported type",];
+metadata [label="Save clinical_custom_fields\nOptions and validation rules are JSON",];
+render [label="UI requests definitions\nRender controls from database metadata",];
+enter [label="Enter clinical details\nSave the clinical record",];
+check [label="API checks record exists\nValidate required values, types and options",];
+save [label="Transaction: write current JSON values\nAppend value history and audit entry",];
+read [label="Reload record\nShow saved values with their field definitions",];
+retire [label="Retire a field when no longer needed\nSoft-delete definition; keep values and history",];
+customize->define [label="",];
+define->validate [label="",];
+validate->metadata [label="",];
+metadata->render [label="",];
+render->enter [label="",];
+enter->check [label="",];
+check->save [label="",];
+save->read [label="",];
+metadata->retire [label="Later, if needed",];
+}

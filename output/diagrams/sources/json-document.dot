@@ -1,0 +1,15 @@
+digraph G {
+graph [bgcolor="transparent", rankdir=LR, pad="0.25", nodesep="0.42", ranksep="0.85", splines=polyline, outputorder=edgesfirst]; node [fontname="Helvetica", fontsize=13, color="#CAD5DF", fontcolor="#203348"]; edge [fontname="Helvetica", fontsize=10, color="#8B99A8", fontcolor="#46566A", arrowsize=0.7];
+rankdir=TB; node [shape=box, style="rounded,filled", fillcolor="#EFF5FA", margin="0.22,0.14", fontsize=15]; edge [fontsize=12];
+template [label="custom_forms\nform_key + version + status",fillcolor="#EFE9FB"];
+fields [label="custom_form_fields\nDefine keys, labels, types and rules",fillcolor="#EFE9FB"];
+visit [label="visits\nOne consultation",];
+response [label="custom_form_responses\nform_id + visit_id\nanswers = {\n  \"night_symptoms\": \"weekly\",\n  \"reliever_days\": 4,\n  \"activity_limited\": true\n}\nextra_fields = optional JSON array",fillcolor="#E8F1FA",fontname="Courier",fontsize=14];
+history [label="custom_form_response_history\nresponse_id + version\nSnapshot of answers and extra fields",fillcolor="#FFF1DB"];
+query [label="Report one JSON property\nanswers ->> '$.reliever_days'",];
+template->fields [label="One template version : many fields",];
+template->response [label="Response uses this template version",];
+visit->response [label="UNIQUE (visit_id, form_id)",];
+response->history [label="Revision snapshots",];
+response->query [label="Extract a value",];
+}

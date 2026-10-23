@@ -1,0 +1,28 @@
+digraph G {
+graph [bgcolor="transparent", rankdir=LR, pad="0.25", nodesep="0.42", ranksep="0.85", splines=polyline, outputorder=edgesfirst]; node [fontname="Helvetica", fontsize=13, color="#CAD5DF", fontcolor="#203348"]; edge [fontname="Helvetica", fontsize=10, color="#8B99A8", fontcolor="#46566A", arrowsize=0.7];
+rankdir=TB; node [shape=box, style="rounded,filled", fillcolor="#EFF5FA", margin="0.22,0.14", fontsize=15]; edge [fontsize=12];
+patient [label="PATIENT\nOne lifelong identity",fillcolor="#E4F3ED"];
+appointment [label="APPOINTMENT\nOptional booking",];
+visit [label="VISIT\nOne actual consultation",];
+record [label="MEDICAL RECORD\nHistory, examination, notes",];
+diagnosis [label="DIAGNOSES + TREATMENTS",];
+vitals [label="VITAL SIGNS + GROWTH",];
+rx [label="PRESCRIPTIONS\nMedication items",];
+lab [label="LAB ORDERS\nTest + result",];
+follow [label="FOLLOW-UPS\nFuture tasks + notes",fillcolor="#FFF1DB"];
+fields [label="CUSTOM FIELD DEFINITIONS\nLabel, type and rules",fillcolor="#EFE9FB"];
+values [label="CUSTOM FIELD VALUES\nTyped JSON + record owner",fillcolor="#EFE9FB"];
+history [label="VALUE HISTORY\nPrevious revisions",fillcolor="#EFE9FB"];
+patient->appointment [label="1 patient : many bookings",];
+patient->visit [label="1 patient : many visits",];
+appointment->visit [label="booking optional; at most 1 visit",];
+visit->record [label="0 or 1 record",];
+record->diagnosis [label="0 or many",];
+visit->vitals [label="multiple vitals; at most 1 growth row",];
+visit->rx [label="0 or many",];
+visit->lab [label="0 or many",];
+visit->follow [label="0 or many",];
+fields->values [label="1 field : many saved values",];
+follow->values [label="example owner; other contexts supported",];
+values->history [label="1 value : many revisions",];
+}

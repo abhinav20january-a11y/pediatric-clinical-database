@@ -1,0 +1,16 @@
+digraph G {
+graph [bgcolor="transparent", rankdir=LR, pad="0.25", nodesep="0.42", ranksep="0.85", splines=polyline, outputorder=edgesfirst]; node [fontname="Helvetica", fontsize=13, color="#CAD5DF", fontcolor="#203348"]; edge [fontname="Helvetica", fontsize=10, color="#8B99A8", fontcolor="#46566A", arrowsize=0.7];
+roles [shape=plain, label=<<TABLE BORDER="1" COLOR="#CCD6E0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD ALIGN="LEFT" BGCOLOR="#EAF0FC"><B>roles</B></TD></TR><TR><TD ALIGN="LEFT">PK role_id</TD></TR></TABLE>>];
+permissions [shape=plain, label=<<TABLE BORDER="1" COLOR="#CCD6E0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD ALIGN="LEFT" BGCOLOR="#EAF0FC"><B>permissions</B></TD></TR><TR><TD ALIGN="LEFT">PK permission_id</TD></TR></TABLE>>];
+role_permissions [shape=plain, label=<<TABLE BORDER="1" COLOR="#CCD6E0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD ALIGN="LEFT" BGCOLOR="#EAF0FC"><B>role_permissions</B></TD></TR><TR><TD ALIGN="LEFT">PK role_id + permission_id</TD></TR><TR><TD ALIGN="LEFT">FK role_id -&gt; roles</TD></TR><TR><TD ALIGN="LEFT">FK permission_id -&gt; permissions</TD></TR></TABLE>>];
+users [shape=plain, label=<<TABLE BORDER="1" COLOR="#CCD6E0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD ALIGN="LEFT" BGCOLOR="#EAF0FC"><B>users</B></TD></TR><TR><TD ALIGN="LEFT">PK user_id</TD></TR><TR><TD ALIGN="LEFT">FK role_id -&gt; roles</TD></TR></TABLE>>];
+departments [shape=plain, label=<<TABLE BORDER="1" COLOR="#CCD6E0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD ALIGN="LEFT" BGCOLOR="#EAF0FC"><B>departments</B></TD></TR><TR><TD ALIGN="LEFT">PK department_id</TD></TR></TABLE>>];
+doctors [shape=plain, label=<<TABLE BORDER="1" COLOR="#CCD6E0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD ALIGN="LEFT" BGCOLOR="#EAF0FC"><B>doctors</B></TD></TR><TR><TD ALIGN="LEFT">PK doctor_id</TD></TR><TR><TD ALIGN="LEFT">FK user_id -&gt; users</TD></TR><TR><TD ALIGN="LEFT">FK department_id -&gt; departments</TD></TR></TABLE>>];
+audit_logs [shape=plain, label=<<TABLE BORDER="1" COLOR="#CCD6E0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD ALIGN="LEFT" BGCOLOR="#EAF0FC"><B>audit_logs</B></TD></TR><TR><TD ALIGN="LEFT">PK audit_log_id</TD></TR><TR><TD ALIGN="LEFT">FK actor_user_id -&gt; users</TD></TR><TR><TD ALIGN="LEFT">entity_type, entity_id</TD></TR><TR><TD ALIGN="LEFT">before_data / after_data JSON</TD></TR></TABLE>>];
+roles -> role_permissions [label="role_id", taillabel="1", headlabel="0..N", labeldistance=1.7];
+permissions -> role_permissions [label="permission_id", taillabel="1", headlabel="0..N", labeldistance=1.7];
+roles -> users [label="role_id", taillabel="1", headlabel="0..N", labeldistance=1.7];
+users -> doctors [label="user_id", taillabel="0..1", headlabel="0..1", labeldistance=1.7];
+departments -> doctors [label="department_id", taillabel="1", headlabel="0..N", labeldistance=1.7];
+users -> audit_logs [label="actor_user_id", taillabel="0..1", headlabel="0..N", labeldistance=1.7];
+}

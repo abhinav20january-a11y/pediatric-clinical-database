@@ -1,0 +1,62 @@
+services:
+  # MySQL owns persistent clinical data and initializes only a new empty volume.
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: pediatric_clinic
+      MYSQL_USER: pediatric_app
+      MYSQL_PASSWORD: pediatric_app_password
+    ports:
+      - "3307:3306"
+    volumes:
+      # Named storage survives container recreation; SQL files initialize fresh storage.
+      - mysql_current_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+    healthcheck:
+      # Prevent the API from starting before MySQL is ready to accept connections.
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uroot",
+          "-proot_password",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Express validates requests and is the only application layer that queries MySQL.
+  api:
+    build: ./server
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: pediatric_app
+      DB_PASSWORD: pediatric_app_password
+      DB_NAME: pediatric_clinic
+      PORT: 3000
+      CLIENT_ORIGIN: http://localhost:5173
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Vite serves the React clinical workspace during local development.
+  web:
+    build: ./client
+    environment:
+      VITE_API_URL: http://localhost:3000/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  # Docker-managed MySQL storage; deleting this volume removes the local dataset.
+  mysql_current_data:

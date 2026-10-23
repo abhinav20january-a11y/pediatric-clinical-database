@@ -1,0 +1,15 @@
+{
+  "name": "pediatric-clinical-database",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": ["server", "client"],
+  "scripts": {
+    "dev": "concurrently -n API,WEB -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w client",
+    "check": "npm run check -w server && npm run build -w client",
+    "seed:large": "node server/src/generate-large-data.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

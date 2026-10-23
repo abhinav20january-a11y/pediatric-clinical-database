@@ -1,0 +1,227 @@
+{
+  "pages": [
+    {
+      "group": "er",
+      "slug": "er-overview",
+      "title": "ER diagram | Start with the patient",
+      "subtitle": "A simplified relationship map. The following pages show all 36 tables in readable sections.",
+      "notes": [
+        "Visits record consultations. Follow-ups record tasks originating from a visit; returning for a consultation creates another visit.",
+        "This overview omits staff, identity, audit and questionnaire tables for clarity. They are included on the detailed pages."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-overview.png"
+    },
+    {
+      "group": "er",
+      "slug": "er-staff",
+      "title": "ER diagram | Staff and audit",
+      "subtitle": "7 tables. Role and permission records describe the access model; authentication is not implemented in the current website.",
+      "notes": [
+        "PK = primary key. FK = foreign key. Edge numbers describe how many records can exist at each end.",
+        "Example: a role can have many users; a doctor can reference zero or one user, and a user can have at most one doctor profile."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-staff.png"
+    },
+    {
+      "group": "er",
+      "slug": "er-patient",
+      "title": "ER diagram | Patient identity and safety",
+      "subtitle": "7 patient tables, plus referenced doctors and users. The patient-guardian bridge supports many-to-many relationships.",
+      "notes": [
+        "Reference boxes repeat tables owned by another section; they are not extra tables.",
+        "Soft-delete columns retain records. The deleted_by relationship points to users; repeated deletion arrows are omitted for readability."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-patient.png"
+    },
+    {
+      "group": "er",
+      "slug": "er-encounter",
+      "title": "ER diagram | Consultations and observations",
+      "subtitle": "7 tables, plus referenced patients, doctors and users.",
+      "notes": [
+        "A visit can exist without an appointment. UNIQUE visit_id allows at most one medical record and one growth record per visit.",
+        "A visit can have several vital-sign measurements. A medical record can have several diagnoses and treatment records."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-encounter.png"
+    },
+    {
+      "group": "er",
+      "slug": "er-care",
+      "title": "ER diagram | Prescriptions, labs and follow-ups",
+      "subtitle": "8 tables, plus referenced visits, patients, doctors, appointments and users.",
+      "notes": [
+        "Prescription items reference a medication catalogue. Lab orders reference a test catalogue and may have one result.",
+        "follow_ups.visit_id points to the originating visit. appointment_id is optional; no completed_visit_id exists in the current schema."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-care.png"
+    },
+    {
+      "group": "er",
+      "slug": "er-dynamic",
+      "title": "ER diagram | Active custom fields",
+      "subtitle": "3 tables, plus referenced users. Clinical owners are listed as foreign keys inside the value table.",
+      "notes": [
+        "Active website: clinical_custom_fields -> clinical_custom_field_values -> clinical_custom_field_value_history.",
+        "Exactly one of patient, visit, prescription, lab order, allergy, immunization or follow-up owns each value. Owner-table arrows are omitted; the exact foreign keys are listed inside the value table.",
+        "CHECK enforces one owner. Triggers ensure the owner matches context_type; the API validates the answer against field_type and validation_rules."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-dynamic.png"
+    },
+    {
+      "group": "er",
+      "slug": "er-questionnaire",
+      "title": "ER diagram | JSON questionnaire tables",
+      "subtitle": "4 tables, plus referenced visits and users. Database evaluation model; no current questionnaire UI or API.",
+      "notes": [
+        "custom_forms identifies a template version. custom_form_fields holds its questions; answers are stored together in each response JSON object.",
+        "UNIQUE (visit_id, form_id) prevents duplicate responses to one template version for one visit. History is linked to the response and revision number."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-questionnaire.png"
+    },
+    {
+      "group": "er",
+      "slug": "er-all-tables",
+      "title": "ER diagram | Complete foreign-key map",
+      "subtitle": "All 36 tables and every declared foreign key, including repeated author/deletion references. Zoom this appendix or open its SVG.",
+      "notes": [
+        "Arrows run from the referenced parent table to the child table carrying the labelled foreign-key column.",
+        "1 or 0..1 at the parent end indicates whether the child must reference a parent. 0..N or 0..1 at the child end shows how many children a parent may have."
+      ],
+      "poster": true,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/er-all-tables.png"
+    },
+    {
+      "group": "workflow",
+      "slug": "workflow-patient",
+      "title": "System workflow | Patient care",
+      "subtitle": "Read from top to bottom. Prescriptions, laboratory work and follow-up tasks are optional branches of a visit.",
+      "notes": [
+        "The repeat-visit loop is a staff workflow; the system does not automatically link a completed follow-up to the later visit.",
+        "Appointments and insurance records exist in the database. The current UI does not provide a complete appointment-booking or insurance-editing workflow."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/workflow-patient.png"
+    },
+    {
+      "group": "workflow",
+      "slug": "workflow-dynamic",
+      "title": "System workflow | Customize any clinical form",
+      "subtitle": "The same dynamic-field component serves patients, visits, prescriptions, labs, allergies, immunizations and follow-ups.",
+      "notes": [
+        "No database column is added when the doctor adds a custom field. A metadata row defines the field, and a value row stores each answer.",
+        "The base clinical record and its custom values are saved through separate API calls. The custom-value batch itself uses a transaction.",
+        "Retired definitions and their values remain in the database; the active-field UI filters out retired definitions."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/workflow-dynamic.png"
+    },
+    {
+      "group": "workflow",
+      "slug": "workflow-system",
+      "title": "System workflow | Read, write and preserve data",
+      "subtitle": "The website uses React, an Express API and MySQL. The diagram shows implemented data paths.",
+      "notes": [
+        "Audit and history links use restrictive retention relationships. Existing data is not physically removed by the clinical soft-delete APIs.",
+        "The current prototype uses seeded user_id = 1 for audit actions. Role tables do not yet provide an actual login or enforced authorization flow."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/workflow-system.png"
+    },
+    {
+      "group": "eav",
+      "slug": "eav-explained",
+      "title": "EAV explained | Entity + Attribute + Value",
+      "subtitle": "Illustrative IDs and sample values. EAV is a table design pattern, not a separate database product.",
+      "notes": [
+        "Entity = the clinical record. Attribute = a configurable field. Value = the answer for that field on that record.",
+        "The value column above is a classic text-based example; EAV can also use typed columns. Many custom fields mean many value rows and more joins.",
+        "Your current website uses this EAV-like relationship pattern with typed JSON in value_json. EAV and JSON can be used together."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/eav-explained.png"
+    },
+    {
+      "group": "json",
+      "slug": "json-active",
+      "title": "JSON explained | What the website actually saves",
+      "subtitle": "The current website stores one typed JSON value for each field and record. It does not put every answer into one response object.",
+      "notes": [
+        "JSON supports strings, numbers, booleans, arrays, objects and null. Dropdown/checkbox options and validation rules also use JSON.",
+        "Exactly one owner column is populated: patient_id, visit_id, prescription_id, lab_order_id, allergy_id, immunization_id or follow_up_id.",
+        "JSON preserves value types. The API enforces field-specific rules; foreign keys and triggers enforce relationships. Examples above are illustrative, not seeded records."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/json-active.png"
+    },
+    {
+      "group": "json",
+      "slug": "json-document",
+      "title": "JSON explained | Whole-response document model",
+      "subtitle": "These questionnaire tables remain in the database for evaluation. Their separate builder page and API have been removed.",
+      "notes": [
+        "Here, all questionnaire answers are keys inside one JSON object. A response is linked to one visit and one template version.",
+        "JSON_TYPE checks the document shape; it does not enforce each field definition or make a template immutable. Those rules need a controlled write path.",
+        "Compare: active website = one JSON value per field; questionnaire model = one JSON object per form response. Both retain relational foreign keys."
+      ],
+      "poster": false,
+      "png": "/Users/abhinavsharma/Documents/ChatGPT/ad and st/output/diagrams/json-document.png"
+    }
+  ],
+  "tableCount": 36,
+  "foreignKeyCount": 80,
+  "groups": {
+    "staff": [
+      "roles",
+      "permissions",
+      "role_permissions",
+      "users",
+      "departments",
+      "doctors",
+      "audit_logs"
+    ],
+    "patient": [
+      "patients",
+      "guardians",
+      "patient_guardians",
+      "patient_identifiers",
+      "insurance_coverages",
+      "allergies",
+      "immunizations"
+    ],
+    "encounter": [
+      "appointments",
+      "visits",
+      "medical_records",
+      "diagnoses",
+      "treatments",
+      "vital_signs",
+      "growth_records"
+    ],
+    "care": [
+      "prescriptions",
+      "prescription_items",
+      "medications",
+      "lab_orders",
+      "lab_tests",
+      "lab_results",
+      "follow_ups",
+      "follow_up_notes"
+    ],
+    "dynamic": [
+      "clinical_custom_fields",
+      "clinical_custom_field_values",
+      "clinical_custom_field_value_history",
+      "custom_forms",
+      "custom_form_fields",
+      "custom_form_responses",
+      "custom_form_response_history"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+digraph G {
+graph [bgcolor="transparent", rankdir=LR, pad="0.25", nodesep="0.42", ranksep="0.85", splines=polyline, outputorder=edgesfirst]; node [fontname="Helvetica", fontsize=13, color="#CAD5DF", fontcolor="#203348"]; edge [fontname="Helvetica", fontsize=10, color="#8B99A8", fontcolor="#46566A", arrowsize=0.7];
+rankdir=TB; node [shape=box, style="rounded,filled", fillcolor="#EFF5FA", margin="0.22,0.14", fontsize=15]; edge [fontsize=12];
+ui [label="REACT WEBSITE\nDashboard / Patients / Follow-ups",fillcolor="#E4F3ED"];
+api [label="EXPRESS API\nValidate input and choose a fixed SQL operation",];
+core [label="RELATIONAL TABLES\nPatient, visit, prescription, lab, follow-up",];
+dynamic [label="DYNAMIC-FIELD TABLES\nMetadata + typed JSON values",];
+rules [label="DATABASE RULES\nForeign keys, UNIQUE, CHECK and triggers",];
+results [label="SELECT / JOIN / reporting views\nReturn JSON through the API",];
+display [label="UI shows saved clinical records\nPatient history and worklists",];
+delete [label="Delete request + reason\nSet deleted_at, deleted_by, deletion_reason",];
+preserve [label="Retain stored records\nNormal queries exclude soft-deleted rows",];
+history [label="CUSTOM VALUE HISTORY\nAppend revisions; selected writes add audit logs",];
+ui->api [label="Read or save",];
+api->core [label="Standard record data",];
+api->dynamic [label="Custom field data",];
+core->rules [label="",];
+dynamic->rules [label="",];
+rules->results [label="Successful read / save",];
+results->display [label="",];
+display->ui [label="Continue working",];
+api->delete [label="Soft-delete operation",];
+delete->preserve [label="",];
+dynamic->history [label="Value updates",];
+}

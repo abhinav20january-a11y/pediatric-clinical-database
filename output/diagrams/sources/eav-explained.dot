@@ -1,0 +1,11 @@
+digraph G {
+graph [bgcolor="transparent", rankdir=LR, pad="0.25", nodesep="0.42", ranksep="0.85", splines=polyline, outputorder=edgesfirst]; node [fontname="Helvetica", fontsize=13, color="#CAD5DF", fontcolor="#203348"]; edge [fontname="Helvetica", fontsize=10, color="#8B99A8", fontcolor="#46566A", arrowsize=0.7];
+rankdir=TB;
+entity [shape=plain,label=<<TABLE BORDER="1" COLOR="#CAD5DF" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10"><TR><TD COLSPAN="2" BGCOLOR="#E4F3ED"><B>ENTITY = the record</B></TD></TR><TR><TD><B>follow_up_id</B></TD><TD><B>meaning</B></TD></TR><TR><TD ALIGN="LEFT">42</TD><TD ALIGN="LEFT">Follow-up for one visit</TD></TR></TABLE>>];
+attributes [shape=plain,label=<<TABLE BORDER="1" COLOR="#CAD5DF" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10"><TR><TD COLSPAN="3" BGCOLOR="#EFE9FB"><B>ATTRIBUTE = field definitions</B></TD></TR><TR><TD><B>attribute_id</B></TD><TD><B>field_key</B></TD><TD><B>type</B></TD></TR><TR><TD ALIGN="LEFT">501</TD><TD ALIGN="LEFT">pain_score</TD><TD ALIGN="LEFT">number</TD></TR><TR><TD ALIGN="LEFT">502</TD><TD ALIGN="LEFT">review_needed</TD><TD ALIGN="LEFT">boolean</TD></TR><TR><TD ALIGN="LEFT">503</TD><TD ALIGN="LEFT">symptom_note</TD><TD ALIGN="LEFT">text</TD></TR></TABLE>>];
+values [shape=plain,label=<<TABLE BORDER="1" COLOR="#CAD5DF" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10"><TR><TD COLSPAN="3" BGCOLOR="#E8F1FA"><B>VALUE = one row per field and record</B></TD></TR><TR><TD><B>entity_id</B></TD><TD><B>attribute_id</B></TD><TD><B>value (text example)</B></TD></TR><TR><TD ALIGN="LEFT">42</TD><TD ALIGN="LEFT">501</TD><TD ALIGN="LEFT">7</TD></TR><TR><TD ALIGN="LEFT">42</TD><TD ALIGN="LEFT">502</TD><TD ALIGN="LEFT">true</TD></TR><TR><TD ALIGN="LEFT">42</TD><TD ALIGN="LEFT">503</TD><TD ALIGN="LEFT">Itching improved</TD></TR></TABLE>>];
+entity -> values [label="Which record? entity_id",fontsize=13]; attributes -> values [label="Which field? attribute_id",fontsize=13];
+question [shape=box,style="rounded,filled",fillcolor="#FFF1DB",margin=0.2,label="Read the answer by joining:
+record 42 + field pain_score + value 7
+New field = new definition row, not a new SQL column."]; values -> question;
+}
